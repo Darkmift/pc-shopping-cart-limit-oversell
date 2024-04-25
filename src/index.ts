@@ -1,12 +1,10 @@
-import express from 'express';
+import express, { Express } from 'express';
 
-const app = express();
+const app: Express = express();
 
 app.use(express.json());
-app.get('/', (req, res) => {
-  res.send('Hello world');
+app.get('/health', (req, res) => {
+  res.send('server running');
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
-});
+export default app;
