@@ -11,7 +11,7 @@
     "start": "NODE_ENV=production npm run build && tsx build/src/index.js",
     "lint": "eslint --fix --config ./eslint.config.js --debug",
     "format": "prettier --write 'src/**/*.{ts,js,json}' 'tests/**/*.{ts,js,json}'",
-    "start:dev": "tsx watch --clear-screen=false src/index.ts",
+    "start:dev": "tsx watch --clear-screen=false main.ts",
     "prepare": "husky",
     "precommit": "lint-staged && npm run lint",
     "prepush": "npm run test"
@@ -24,6 +24,7 @@
     "eslint-config-love": "^47.0.0",
     "express": "^4.19.2",
     "swagger-ui-express": "^5.0.0",
+    "winston": "^3.13.0",
     "zod": "^3.23.4"
   },
   "devDependencies": {
