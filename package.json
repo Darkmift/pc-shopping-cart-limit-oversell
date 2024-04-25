@@ -14,7 +14,12 @@
     "start:dev": "tsx watch --clear-screen=false main.ts",
     "prepare": "husky",
     "precommit": "lint-staged && npm run lint",
-    "prepush": "npm run test"
+    "prepush": "npm run test",
+    "docker:build": "docker-compose build",
+    "docker:start": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean-start": "docker-compose stop && docker-compose rm -f && docker-compose up -d"
   },
   "keywords": [],
   "author": "",
