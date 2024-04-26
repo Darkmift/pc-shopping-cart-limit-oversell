@@ -5,6 +5,8 @@ import * as schema from './schema';
 
 export const poolConnection = mysql.createPool({
   host: config.MYSQL_HOST,
+  port: config.MYSQL_PORT,
+  password: config.MYSQL_PASSWORD,
   user: config.MYSQL_USER,
   database: config.MYSQL_DATABASE,
 });
