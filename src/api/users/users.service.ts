@@ -1,17 +1,65 @@
 import { IUserDTO } from '@/types/user';
+import db from '@/common/drizzle/db';
+import { users } from '@/common/drizzle/db/schema';
+import logger from '@/utils/logger';
+import { sql } from 'drizzle-orm';
 
 export default class UsersService {
+  private static userRowToDTO(row: any): IUserDTO {
+    return {
+      id: row.id,
+      username: row.username,
+      password: row.password,
+      lastActive: row.lastActive,
+      archived: row.archived,
+    };
+  }
+
+  // fn that uses userRowToDTO on array
+  private static usersManyRowsToDTO(rows: any[]): IUserDTO[] {
+    return rows.map(this.userRowToDTO);
+  }
+
   static async getUsers(): Promise<IUserDTO[]> {
-    return [
-      {
-        id: '1',
-        name: 'John Doe',
-        email: '',
-        password: '',
-        role: 'admin',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ];
+    try {
+      const users = await db.query.users.findMany();
+      return this.usersManyRowsToDTO(users);
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      return [];
+    }
+  }
+
+  static async getUserById(id: string): Promise<IUserDTO | null> {
+    try {
+      const prepared = db.query.users
+        .findFirst({
+          where: (users, { eq }) => eq(users.id, sql.placeholder('id')),
+        })
+        .prepare();
+
+      const user = await prepared.execute({ id });
+      return this.userRowToDTO(user);
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      return null;
+    }
+  }
+
+  static async createUser(user: IUserDTO): Promise<boolean> {
+    try {
+      const newUser = await db.insert(users).values({
+        username: user.username,
+        password: user.password,
+      });
+
+      return !!newUser;
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      return false;
+    }
   }
 }
