@@ -14,7 +14,7 @@
     "start:dev": "tsx watch --clear-screen=false main.ts",
     "prepare": "husky",
     "drizzle:migrate": "pnpm drizzle-kit generate:mysql",
-    "precommit": "npx lint-staged && npm run lint",
+    "precommit": "lint-staged && npm run lint",
     "prepush": "npm run test",
     "docker:build": "docker-compose build",
     "docker:start": "docker-compose up -d",
