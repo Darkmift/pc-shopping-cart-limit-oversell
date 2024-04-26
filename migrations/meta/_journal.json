@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1714162048376,
+      "tag": "0000_optimal_sugar_man",
+      "breakpoints": true
+    }
+  ]
+}
