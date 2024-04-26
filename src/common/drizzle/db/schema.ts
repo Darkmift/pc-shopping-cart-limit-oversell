@@ -1,12 +1,10 @@
 import {
   mysqlTable,
   varchar,
-  serial,
   timestamp,
   tinyint,
   mysqlEnum,
   int,
-  mysqlSchema,
   index,
 } from 'drizzle-orm/mysql-core';
 import { relations } from 'drizzle-orm';
@@ -14,7 +12,7 @@ import { relations } from 'drizzle-orm';
 export const users = mysqlTable(
   'users',
   {
-    id: serial('id').primaryKey(),
+    id: int('id').primaryKey().autoincrement(),
     username: varchar('username', { length: 256 }).unique(),
     password: varchar('password', { length: 255 }),
     lastActive: timestamp('lastActive').defaultNow(),
@@ -28,13 +26,13 @@ export const users = mysqlTable(
 );
 
 export const admins = mysqlTable('admins', {
-  id: serial('id').primaryKey(),
+  id: int('id').primaryKey().autoincrement(),
   username: varchar('username', { length: 256 }).unique(),
   role: mysqlEnum('role', ['1', '2', '3']).default('1').notNull(),
 });
 
 export const products = mysqlTable('products', {
-  id: serial('id').primaryKey(),
+  id: int('id').primaryKey().autoincrement(),
   name: varchar('name', { length: 255 }).notNull(),
   amount: int('amount').notNull(),
   price: int('price').notNull(),
@@ -43,7 +41,7 @@ export const products = mysqlTable('products', {
 });
 
 export const productInventoryItems = mysqlTable('product_inventory_items', {
-  id: serial('id').primaryKey(),
+  id: int('id').primaryKey().autoincrement(),
   productId: int('productId')
     .notNull()
     .references(() => products.id),
@@ -53,19 +51,25 @@ export const productInventoryItems = mysqlTable('product_inventory_items', {
 });
 
 export const carts = mysqlTable('carts', {
-  id: serial('id').primaryKey(),
+  id: int('id').primaryKey().autoincrement(),
   dateCreated: timestamp('dateCreated').defaultNow(),
-  userId: int('userId').references(() => users.id),
+  userId: int('userId')
+    .notNull()
+    .references(() => users.id),
   lastActive: timestamp('lastActive').defaultNow().onUpdateNow(),
   isActive: tinyint('isActive').default(1),
   archived: tinyint('archived').default(0),
   pricePaidInActual: int('pricePaidInActual'),
 });
 
-export const cartProducts = mysqlTable('cart_products', {
-  id: serial('id').primaryKey(),
-  cartId: int('cartId').references(() => carts.id),
-  productId: int('productId').references(() => products.id),
+export const cartProducts = mysqlTable('cartProducts', {
+  id: int('id').primaryKey().autoincrement(),
+  cartId: int('cartId')
+    .notNull()
+    .references(() => carts.id),
+  productId: int('productId')
+    .notNull()
+    .references(() => products.id),
   pricePaidPerProduct: int('pricePaidPerProduct'),
 });
 

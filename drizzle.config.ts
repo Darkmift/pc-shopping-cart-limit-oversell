@@ -8,6 +8,8 @@ export default defineConfig({
   dbCredentials: {
     host: config.MYSQL_HOST,
     user: config.MYSQL_USER,
+    password: config.MYSQL_PASSWORD,
+    port: config.MYSQL_PORT,
     database: config.MYSQL_DATABASE,
   },
   verbose: true,
