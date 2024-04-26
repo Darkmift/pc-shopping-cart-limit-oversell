@@ -230,7 +230,7 @@ interface Cart {
 ```
 
 ## SQL
-
+![Diagram](PC_shop.svg)
 ```sql
 -- Users Table
 CREATE TABLE users (
