@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "cc92bcfd-aeb1-4246-b474-4ac11bd07469",
+  "id": "25ac595a-7556-4b69-a8b4-0151aa8760c9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admins": {
@@ -48,77 +48,6 @@
           ]
         }
       }
-    },
-    "cartProducts": {
-      "name": "cartProducts",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "cartId": {
-          "name": "cartId",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "productId": {
-          "name": "productId",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "pricePaidPerProduct": {
-          "name": "pricePaidPerProduct",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "cartProducts_cartId_carts_id_fk": {
-          "name": "cartProducts_cartId_carts_id_fk",
-          "tableFrom": "cartProducts",
-          "tableTo": "carts",
-          "columnsFrom": [
-            "cartId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "cartProducts_productId_products_id_fk": {
-          "name": "cartProducts_productId_products_id_fk",
-          "tableFrom": "cartProducts",
-          "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "cartProducts_id": {
-          "name": "cartProducts_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
     },
     "carts": {
       "name": "carts",
@@ -169,13 +98,6 @@
           "notNull": false,
           "autoincrement": false,
           "default": 0
-        },
-        "pricePaidInActual": {
-          "name": "pricePaidInActual",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
         }
       },
       "indexes": {},
@@ -197,70 +119,6 @@
       "compositePrimaryKeys": {
         "carts_id": {
           "name": "carts_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "product_inventory_items": {
-      "name": "product_inventory_items",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "cartId": {
-          "name": "cartId",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "product_inventory_items_productId_products_id_fk": {
-          "name": "product_inventory_items_productId_products_id_fk",
-          "tableFrom": "product_inventory_items",
-          "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "product_inventory_items_cartId_carts_id_fk": {
-          "name": "product_inventory_items_cartId_carts_id_fk",
-          "tableFrom": "product_inventory_items",
-          "tableTo": "carts",
-          "columnsFrom": [
-            "cartId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "product_inventory_items_id": {
-          "name": "product_inventory_items_id",
           "columns": [
             "id"
           ]
@@ -299,14 +157,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "price_percent": {
-          "name": "price_percent",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 100
-        },
         "archived": {
           "name": "archived",
           "type": "tinyint",
@@ -326,6 +176,56 @@
           ]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "products_inventory": {
+      "name": "products_inventory",
+      "columns": {
+        "productId": {
+          "name": "productId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "cartId": {
+          "name": "cartId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "products_inventory_productId_products_id_fk": {
+          "name": "products_inventory_productId_products_id_fk",
+          "tableFrom": "products_inventory",
+          "tableTo": "products",
+          "columnsFrom": [
+            "productId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "products_inventory_cartId_carts_id_fk": {
+          "name": "products_inventory_cartId_carts_id_fk",
+          "tableFrom": "products_inventory",
+          "tableTo": "carts",
+          "columnsFrom": [
+            "cartId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "users": {
@@ -369,15 +269,7 @@
           "default": 0
         }
       },
-      "indexes": {
-        "usernameIdx": {
-          "name": "usernameIdx",
-          "columns": [
-            "username"
-          ],
-          "isUnique": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "users_id": {

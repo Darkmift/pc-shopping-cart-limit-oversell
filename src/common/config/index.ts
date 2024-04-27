@@ -10,8 +10,8 @@ logger.info(`Loading environment variables from ${envFile}`);
 const env = cleanEnv(process.env, {
   PORT: num({ default: 3000 }),
   MYSQL_HOST: str(),
-  MYSQL_PORT: num({ default: 3306 }),
-  MYSQL_USER: str(),
+  MYSQL_PORT: num(),
+  MYSQL_USER: str({ default: 'root' }),
   MYSQL_PASSWORD: str(),
   MYSQL_DATABASE: str(),
   NODE_ENV: str({ choices: ['development', 'test', 'production', 'staging'] }),
