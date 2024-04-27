@@ -16,7 +16,7 @@ export const poolConnection = mysql.createPool({
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
-  debug: true,
+  // debug: true,
 });
 
 const db: MySql2Database<typeof schema> = drizzle(poolConnection, {
