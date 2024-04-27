@@ -16,6 +16,7 @@
     "drizzle:create-migrations": "NODE_ENV=development pnpm drizzle-kit generate:mysql",
     "drizzle:testing:run-migrations": "NODE_ENV=test pnpm tsx src/common/drizzle/db/migrate.ts",
     "drizzle:staging:run-migrations": "NODE_ENV=development pnpm tsx src/common/drizzle/db/migrate.ts",
+    "drizzle:staging:introspect": "NODE_ENV=development pnpm drizzle-kit introspect:mysql",
     "precommit": "lint-staged && npm run lint",
     "prepush": "npm run test",
     "docker:build": "docker-compose build",
