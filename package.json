@@ -6,23 +6,36 @@
   "type": "module",
   "scripts": {
     "ts:check": "tsc --noEmit",
-    "test": "jest --runInBand --detectOpenHandles --forceExit",
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
     "build": "rimraf build && tsc",
     "start": "NODE_ENV=production npm run build && tsx build/src/index.js",
     "lint": "eslint --fix --config ./eslint.config.js --debug",
     "format": "prettier --write 'src/**/*.{ts,js,json}' 'tests/**/*.{ts,js,json}'",
-    "start:dev": "tsx watch --clear-screen=false main.ts",
+    "start:dev": "NODE_ENV=test tsx watch --clear-screen=false main.ts",
     "prepare": "husky",
+    "drizzle:create-migrations": "NODE_ENV=development pnpm drizzle-kit generate:mysql",
+    "drizzle:testing:run-migrations": "NODE_ENV=test pnpm tsx src/common/drizzle/db/migrate.ts",
+    "drizzle:staging:run-migrations": "NODE_ENV=development pnpm tsx src/common/drizzle/db/migrate.ts",
+    "drizzle:staging:introspect": "NODE_ENV=development pnpm drizzle-kit introspect:mysql",
     "precommit": "lint-staged && npm run lint",
-    "prepush": "npm run test"
+    "prepush": "npm run test",
+    "docker:build": "docker-compose build",
+    "docker:start": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean-start": "docker-compose down --volumes && docker-compose up -d"
+
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.9",
+    "envalid": "^8.0.0",
     "eslint-config-love": "^47.0.0",
     "express": "^4.19.2",
+    "mysql2": "^3.9.7",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.13.0",
     "zod": "^3.23.4"
@@ -37,6 +50,7 @@
     "@types/swagger-ui-express": "^4.1.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "drizzle-kit": "^0.20.17",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
@@ -83,6 +97,6 @@
     ]
   },
   "lint-staged": {
-    "*.{js,ts}": "eslint --fix --config ./eslint.config.js --debug"
+    "*.{js,ts}": "npx eslint --fix --config ./eslint.config.js --debug"
   }
 }

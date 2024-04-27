@@ -1,9 +1,7 @@
 export interface IUserDTO {
   id: string;
-  email: string;
+  username: string;
   password: string;
-  name: string;
-  role: string;
-  createdAt: Date;
-  updatedAt: Date;
+  lastActive: Date;
+  archived: boolean;
 }
