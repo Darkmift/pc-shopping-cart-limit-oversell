@@ -232,61 +232,49 @@ interface Cart {
 ## SQL
 ![Diagram](PC_shop.svg)
 ```sql
--- Users Table
-CREATE TABLE users (
-    id CHAR(36) PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    name VARCHAR(255) NOT NULL,
-    lastActive TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    password VARCHAR(255) NOT NULL,
-    archived TINYINT(1) NOT NULL DEFAULT 0
+CREATE TABLE `admins` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`username` varchar(256),
+	`role` enum('1','2','3') NOT NULL DEFAULT '1',
+	CONSTRAINT `admins_id` PRIMARY KEY(`id`),
+	CONSTRAINT `admins_username_unique` UNIQUE(`username`)
 );
-
--- Admins Table
-CREATE TABLE admins (
-    id CHAR(36) PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    role TINYINT NOT NULL CHECK (role IN (1, 2, 3))
+--> statement-breakpoint
+CREATE TABLE `carts` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`dateCreated` timestamp DEFAULT (now()),
+	`userId` int NOT NULL,
+	`lastActive` timestamp DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	`isActive` tinyint DEFAULT 1,
+	`archived` tinyint DEFAULT 0,
+	CONSTRAINT `carts_id` PRIMARY KEY(`id`)
 );
-
--- Products Table
-CREATE TABLE products (
-    id CHAR(36) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    amount INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    pricePercent INT NOT NULL DEFAULT 100,
-    archived TINYINT(1) NOT NULL DEFAULT 0
+--> statement-breakpoint
+CREATE TABLE `products` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`name` varchar(255) NOT NULL,
+	`amount` int NOT NULL,
+	`price` int NOT NULL,
+	`archived` tinyint DEFAULT 0,
+	CONSTRAINT `products_id` PRIMARY KEY(`id`)
 );
-
--- Product Inventory Items Table
-CREATE TABLE product_inventory_items (
-    id CHAR(36) PRIMARY KEY,
-    productId CHAR(36) NOT NULL,
-    cartId CHAR(36),   -- Nullable
-    FOREIGN KEY (productId) REFERENCES products(id),
-    FOREIGN KEY (cartId) REFERENCES carts(id)
+--> statement-breakpoint
+CREATE TABLE `products_inventory` (
+	`productId` int NOT NULL,
+	`cartId` int NOT NULL
 );
-
--- Carts Table
-CREATE TABLE carts (
-    id CHAR(36) PRIMARY KEY,
-    dateCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    userId CHAR(36) NOT NULL,
-    lastActive TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    isActive TINYINT(1) NOT NULL,
-    archived TINYINT(1) NOT NULL DEFAULT 0,
-    pricePaidInActual DECIMAL(10, 2),
-    FOREIGN KEY (userId) REFERENCES users(id)
+--> statement-breakpoint
+CREATE TABLE `users` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`username` varchar(256),
+	`password` varchar(255),
+	`lastActive` timestamp DEFAULT (now()),
+	`archived` tinyint DEFAULT 0,
+	CONSTRAINT `users_id` PRIMARY KEY(`id`),
+	CONSTRAINT `users_username_unique` UNIQUE(`username`)
 );
--- Cart Products Table
-CREATE TABLE cart_products (
-    cartId CHAR(36) NOT NULL,
-    productId CHAR(36) NOT NULL,
-    quantity INT NOT NULL,
-    pricePaidPerProduct DECIMAL(10, 2) NOT NULL,
-    PRIMARY KEY (cartId, productId),
-    FOREIGN KEY (cartId) REFERENCES carts(id),
-    FOREIGN KEY (productId) REFERENCES products(id)
-);
+--> statement-breakpoint
+ALTER TABLE `carts` ADD CONSTRAINT `carts_userId_users_id_fk` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `products_inventory` ADD CONSTRAINT `products_inventory_productId_products_id_fk` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `products_inventory` ADD CONSTRAINT `products_inventory_cartId_carts_id_fk` FOREIGN KEY (`cartId`) REFERENCES `carts`(`id`) ON DELETE no action ON UPDATE no action;
 ```
