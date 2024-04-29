@@ -11,7 +11,7 @@ export const verifyToken = (token: string): IUserDTO | null => {
   try {
     return jwt.verify(token, config.JWT_SECRET);
   } catch (error) {
-    logger.error('JWT verify failed', error);
+    logger.error('JWT verify failed', (error as Error).message);
     return null;
   }
 };
