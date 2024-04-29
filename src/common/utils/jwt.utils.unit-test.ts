@@ -1,7 +1,14 @@
+import { IUserDTO } from '@/types/user';
 import { verifyToken, generateToken } from './jwt.util';
 
 describe('JWT Utils', () => {
-  const user = { id: 1, username: 'test' };
+  const user: IUserDTO = {
+    id: '123',
+    username: 'bob',
+    password: '12345',
+    lastActive: new Date(),
+    archived: false,
+  };
   describe('generateToken', () => {
     it('should generate a token', () => {
       const token = generateToken(user);
@@ -16,6 +23,9 @@ describe('JWT Utils', () => {
       const token = generateToken(user);
       const decoded = verifyToken(token);
       expect(decoded).toBeDefined();
+      if (!decoded) {
+        throw new Error('decoded is undefined');
+      }
       expect(decoded.id).toBe(user.id);
       expect(decoded.username).toBe(user.username);
     });
