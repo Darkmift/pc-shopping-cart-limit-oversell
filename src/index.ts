@@ -14,6 +14,6 @@ app.get('/health', (req, res) => {
   res.send('server running');
 });
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// app.use('/api/v1', apiRouter);
+app.use('/api/v1', apiRouter);
 
 export default app;
