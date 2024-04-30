@@ -14,5 +14,7 @@ see package.json
 
 ### Run `pnpm run dev`
 
+### Open `/api-docs` for swagger docs
+
 ### Project Characterization (will update as needed over time)
 [characterization](./assets/characterization.md)
