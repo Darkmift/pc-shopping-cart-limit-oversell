@@ -1,4 +1,4 @@
-import { IUserDTO } from '@/types/user';
+import { ITableRowId, IUserCreateDTO, IUserDTO } from '@/types/user';
 import db from '@/common/drizzle/db';
 import { users } from '@/common/drizzle/db/schema';
 import logger from '@/utils/logger';
@@ -34,7 +34,7 @@ export default class UsersService {
     }
   }
 
-  static async getUserById(id: string): Promise<IUserDTO | null> {
+  static async getUserById(id: ITableRowId): Promise<IUserDTO | null> {
     try {
       const prepared = db.query.users
         .findFirst({
@@ -68,17 +68,16 @@ export default class UsersService {
     }
   }
 
-  static async createUser(user: IUserDTO): Promise<boolean> {
+  static async createUser(user: IUserCreateDTO): Promise<number> {
     try {
       const newUser = await db.insert(users).values({
         username: user.username,
         password: user.password,
       });
-
-      return !!newUser;
+      return newUser[0].insertId;
     } catch (error) {
       logger.error(error);
-      return false;
+      return -1;
     }
   }
 }

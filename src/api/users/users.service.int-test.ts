@@ -13,7 +13,7 @@ describe('UsersService', () => {
 
   it('should create a user', async () => {
     const result = await UsersService.createUser(user as IUserDTO);
-    expect(result).toBe(true);
+    expect(result).toBeGreaterThan(0);
   });
 
   it('should get all users', async () => {
