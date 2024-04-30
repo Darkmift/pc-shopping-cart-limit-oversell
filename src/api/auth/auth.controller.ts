@@ -10,7 +10,7 @@ export const register: ControllerMethod = async (req, res) => {
   return buildStandartResponse({
     res,
     data: result,
-    status: result ? 201 : 400,
+    status: result > 0 ? 201 : 400,
   });
 };
 
