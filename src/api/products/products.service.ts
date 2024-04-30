@@ -26,7 +26,7 @@ export class ProductsService {
 
   public async createProduct(product: IProductCreateDTO) {
     try {
-      const newProduct = await db.insert(products).values(product).execute();
+      const newProduct = await db.insert(products).values(product);
       const newProductId = newProduct[0].insertId;
 
       return newProductId;

@@ -1,12 +1,14 @@
-    import request from 'supertest';
-    import productsRouter from './products.router';
-    import app from '@/index';
+import request from 'supertest';
+import productsRouter from './products.router';
+import app from '@/index';
 
-    app.use('/products', productsRouter);
+app.use('/products', productsRouter);
 
-    describe('ProductsRouter', () => {
-      it('GET / - should return "Hello from ProductsService!"', async () => {
-        const res = await request(app).get('/products');
-        expect(res.text).toEqual('Hello from ProductsService!');
-      });
-    });
+describe('ProductsRouter', () => {
+  it('GET / - should return "Hello from ProductsService!"', async () => {
+    const res = await request(app).get('/products');
+    // expect array
+    expect(res.body.data).toEqual([]);
+    expect(res.status).toEqual(200);
+  });
+});
