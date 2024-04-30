@@ -1,7 +1,7 @@
 import { IUserDTO } from '@/types/user';
 import AuthService from './auth.service';
 import UsersService from '../users/users.service';
-import logger from '@/utils/logger';
+import logger from '@/common/utils/logger';
 
 describe('AuthService', () => {
   let user: Pick<IUserDTO, 'password' | 'username'>;

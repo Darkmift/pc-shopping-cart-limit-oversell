@@ -1,7 +1,7 @@
 import { ITableRowId, IUserCreateDTO, IUserDTO } from '@/types/user';
 import db from '@/common/drizzle/db';
 import { users } from '@/common/drizzle/db/schema';
-import logger from '@/utils/logger';
+import logger from '@/common/utils/logger';
 import { eq, sql } from 'drizzle-orm';
 
 export default class UsersService {

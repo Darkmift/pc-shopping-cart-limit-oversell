@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import config from '@/common/config';
-import logger from '@/utils/logger';
+import logger from '@/common/utils/logger';
 import { IUserDTO } from '@/types/user';
 
 export const generateToken = (payload: Omit<IUserDTO, 'password'>) => {

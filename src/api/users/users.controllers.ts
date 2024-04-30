@@ -1,9 +1,9 @@
 import { ControllerMethod } from '@/types/controller';
 import UsersService from './users.service';
 import { CartsService } from '@/api/carts/carts.service';
-
 import { IUserDTO } from '@/types/user';
-import buildStandartResponse from '@/utils/prepareResponsePayload';
+import buildStandartResponse from '@/common/utils/prepareResponsePayload';
+
 
 // Here, ensure the type matches the expected array of IUserDTO
 export const getUsers: ControllerMethod<Promise<IUserDTO>> = async (_, res) => {

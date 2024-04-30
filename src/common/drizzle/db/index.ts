@@ -2,7 +2,7 @@ import config from '@/common/config';
 import { drizzle, type MySql2Database } from 'drizzle-orm/mysql2';
 import mysql from 'mysql2/promise';
 import * as schema from './schema';
-import logger from '@/utils/logger';
+import logger from '@/common/utils/logger';
 
 export const poolConnection = mysql.createPool({
   host: config.MYSQL_HOST,

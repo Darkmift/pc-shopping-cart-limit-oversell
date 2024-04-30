@@ -1,6 +1,7 @@
 import { ControllerMethod } from '@/types/controller';
 import { CartsService } from './carts.service';
-import buildStandartResponse from '@/utils/prepareResponsePayload';
+import buildStandartResponse from '@/common/utils/prepareResponsePayload';
+
 
 export class CartsController {
   private service: CartsService;

@@ -1,6 +1,6 @@
 import db from '@/common/drizzle/db';
 import { carts } from '@/common/drizzle/db/schema';
-import logger from '@/utils/logger';
+import logger from '@/common/utils/logger';
 import { and, eq, sql } from 'drizzle-orm';
 
 export class CartsService {
