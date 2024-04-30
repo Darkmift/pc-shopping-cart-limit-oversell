@@ -26,13 +26,15 @@ CREATE TABLE `products` (
 );
 --> statement-breakpoint
 CREATE TABLE `products_inventory` (
+	`id` int AUTO_INCREMENT NOT NULL,
 	`productId` int NOT NULL,
-	`cartId` int NOT NULL
+	`cartId` int,
+	CONSTRAINT `products_inventory_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `users` (
 	`id` int AUTO_INCREMENT NOT NULL,
-	`username` varchar(256),
+	`username` varchar(256) NOT NULL,
 	`password` varchar(255),
 	`lastActive` timestamp DEFAULT (now()),
 	`archived` tinyint DEFAULT 0,
