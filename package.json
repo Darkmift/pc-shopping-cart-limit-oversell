@@ -92,7 +92,8 @@
       "^@/(.*)$": "<rootDir>/$1"
     },
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globalTeardown": "./jest.global-teardown.ts"
   },
   "baseUrl": "./",
   "paths": {
