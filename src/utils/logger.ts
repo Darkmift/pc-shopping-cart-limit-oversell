@@ -31,7 +31,7 @@ const myCustomFormat = winston.format.combine(
 const exceptionHandlers = [
   new winston.transports.DailyRotateFile({
     // name: 'Error Logs',
-    filename: 'server/logs/errlogs/exceptions-%DATE%.log',
+    filename: 'logs/exceptions/exceptions-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: '128m',
