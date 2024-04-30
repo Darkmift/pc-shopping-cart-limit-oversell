@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "25ac595a-7556-4b69-a8b4-0151aa8760c9",
+  "id": "182b48c7-764b-40f1-b95f-4cba65658b2f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "admins": {
@@ -181,6 +181,13 @@
     "products_inventory": {
       "name": "products_inventory",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
         "productId": {
           "name": "productId",
           "type": "int",
@@ -192,7 +199,7 @@
           "name": "cartId",
           "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         }
       },
@@ -225,7 +232,14 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "products_inventory_id": {
+          "name": "products_inventory_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "users": {
@@ -242,7 +256,7 @@
           "name": "username",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "password": {
