@@ -11,5 +11,9 @@ cartsRouter.get('/', (req, res) => {
 cartsRouter.get('/:cartId', controller.getCartById);
 cartsRouter.post('/', controller.createCart);
 cartsRouter.delete('/:cartId', controller.archiveCart);
+cartsRouter.post(
+  '/:cartId/add-product/:productId',
+  controller.addProductToCart,
+);
 
 export default cartsRouter;
