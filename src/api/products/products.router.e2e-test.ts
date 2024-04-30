@@ -1,5 +1,5 @@
 import request from 'supertest';
-import productsRouter from './products.router';
+import productsRouter from './products.routes';
 import app from '@/index';
 
 app.use('/products', productsRouter);

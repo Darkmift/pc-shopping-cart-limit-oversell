@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import userRouter from './users/users.routes';
 import authRouter from './auth/auth.routes';
-import productsRouter from './products/products.router';
-import cartsRouter from './carts/carts.router';
-import productInventoryRouter from './product-inventory/product-inventory.router';
+import productsRouter from './products/products.routes';
+import cartsRouter from './carts/carts.routes';
+import productInventoryRouter from './product-inventory/product-inventory.routes';
 
 const apiRouter: Router = Router();
 

@@ -3,19 +3,16 @@ import AuthService from './auth.service';
 import { IUserDTO } from '@/types/user';
 import buildStandartResponse from '@/common/utils/prepareResponsePayload';
 
-
-// a register controller method
 export const register: ControllerMethod = async (req, res) => {
   const user = req.body as IUserDTO;
   const result = await AuthService.registerUser(user);
   return buildStandartResponse({
     res,
-    data: result,
+    data: !!result,
     status: result > 0 ? 201 : 400,
   });
 };
 
-// a login controller method
 export const login: ControllerMethod = async (req, res) => {
   const user = req.body as Pick<IUserDTO, 'username' | 'password'>;
   const result = await AuthService.loginUser(user);
@@ -32,7 +29,7 @@ export const login: ControllerMethod = async (req, res) => {
 
   return buildStandartResponse({
     res,
-    data: result,
+    data: result.user,
     status: 200,
   });
 };

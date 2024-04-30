@@ -1,5 +1,5 @@
     import request from 'supertest';
-    import cartsRouter from './carts.router';
+    import cartsRouter from './carts.routes';
     import app from '@/index';
 
     app.use('/carts', cartsRouter);
