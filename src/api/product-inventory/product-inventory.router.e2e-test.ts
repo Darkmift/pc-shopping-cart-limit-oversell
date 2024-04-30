@@ -1,5 +1,5 @@
     import request from 'supertest';
-    import productInventoryRouter from './product-inventory.router';
+    import productInventoryRouter from './product-inventory.routes';
     import app from '@/index';
 
     app.use('/product-inventory', productInventoryRouter);
