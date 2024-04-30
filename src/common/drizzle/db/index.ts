@@ -2,6 +2,7 @@ import config from '@/common/config';
 import { drizzle, type MySql2Database } from 'drizzle-orm/mysql2';
 import mysql from 'mysql2/promise';
 import * as schema from './schema';
+import logger from '@/common/utils/logger';
 
 export const poolConnection = mysql.createPool({
   host: config.MYSQL_HOST,
@@ -17,6 +18,22 @@ export const poolConnection = mysql.createPool({
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
   // debug: true,
+});
+
+poolConnection.on('connection', (connection) => {
+  logger.info('MySQL connection established');
+});
+
+poolConnection.on('acquire', (connection) => {
+  logger.info('MySQL connection acquired');
+});
+
+poolConnection.on('enqueue', () => {
+  logger.info('Waiting for available connection slot');
+});
+
+poolConnection.on('release', (connection) => {
+  logger.info('MySQL connection released');
 });
 
 const db: MySql2Database<typeof schema> = drizzle(poolConnection, {

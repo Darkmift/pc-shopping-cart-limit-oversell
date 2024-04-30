@@ -1,7 +1,8 @@
 import { ControllerMethod } from '@/types/controller';
 import AuthService from './auth.service';
 import { IUserDTO } from '@/types/user';
-import buildStandartResponse from '@/utils/prepareResponsePayload';
+import buildStandartResponse from '@/common/utils/prepareResponsePayload';
+
 
 // a register controller method
 export const register: ControllerMethod = async (req, res) => {
@@ -10,7 +11,7 @@ export const register: ControllerMethod = async (req, res) => {
   return buildStandartResponse({
     res,
     data: result,
-    status: result ? 201 : 400,
+    status: result > 0 ? 201 : 400,
   });
 };
 

@@ -1,7 +1,7 @@
 import { IUserDTO } from '@/types/user';
 import AuthService from './auth.service';
 import UsersService from '../users/users.service';
-import logger from '@/utils/logger';
+import logger from '@/common/utils/logger';
 
 describe('AuthService', () => {
   let user: Pick<IUserDTO, 'password' | 'username'>;
@@ -14,25 +14,26 @@ describe('AuthService', () => {
   });
 
   afterAll(async () => {
-    await UsersService.removeUserByUsername(user.username);
+    await UsersService.removeUserByUsername(user.username!);
   });
 
   describe('registerUser', () => {
     it('should register a user', async () => {
       const result = await AuthService.registerUser(user as IUserDTO);
-      expect(result).toBe(true);
+      // expect result to be a number
+      expect(result).toBeGreaterThan(0);
     });
 
     it('should not register a user with an existing username', async () => {
       const result = await AuthService.registerUser(user as IUserDTO);
-      expect(result).toBe(false);
+      expect(result).toBe(-1);
     });
   });
 
   describe('loginUser', () => {
     beforeAll(async () => {
       const registeredUser = await UsersService.getUserByUsername(
-        user.username,
+        user.username!,
       );
 
       logger.info('registeredUser->login test', registeredUser);

@@ -1,5 +1,5 @@
-import logger from '@/utils/logger';
 import dotenv from 'dotenv';
+import logger from '@/common/utils/logger';
 import { cleanEnv, num, str } from 'envalid';
 
 // Ensure the test environment file is prioritized during tests

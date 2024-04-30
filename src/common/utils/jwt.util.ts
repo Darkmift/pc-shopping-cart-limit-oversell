@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import config from '@/common/config';
-import logger from '@/utils/logger';
+import logger from '@/common/utils/logger';
 import { IUserDTO } from '@/types/user';
 
 export const generateToken = (payload: Omit<IUserDTO, 'password'>) => {
@@ -11,7 +11,7 @@ export const verifyToken = (token: string): IUserDTO | null => {
   try {
     return jwt.verify(token, config.JWT_SECRET);
   } catch (error) {
-    logger.error('JWT verify failed', error);
+    logger.error('JWT verify failed', (error as Error).message);
     return null;
   }
 };

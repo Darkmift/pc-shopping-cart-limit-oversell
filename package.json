@@ -40,6 +40,7 @@
     "mysql2": "^3.9.7",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.23.4"
   },
   "devDependencies": {
@@ -91,7 +92,8 @@
       "^@/(.*)$": "<rootDir>/$1"
     },
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globalTeardown": "./jest.global-teardown.ts"
   },
   "baseUrl": "./",
   "paths": {

@@ -1,6 +1,6 @@
 import { IUserDTO } from '@/types/user';
 import UserService from '@/api/users/users.service';
-import logger from '@/utils/logger';
+import logger from '@/common/utils/logger';
 import { hashPassword, comparePassword } from '@/common/utils/bcrypt.util';
 import { generateToken } from '@/common/utils/jwt.util';
 
@@ -29,14 +29,14 @@ class AuthService {
     return userWithoutPassword;
   }
 
-  static async registerUser(user: IUserDTO): Promise<boolean> {
+  static async registerUser(user: IUserDTO): Promise<number> {
     try {
       user.password = await hashPassword(user.password);
-      const newUser = await UserService.createUser(user);
-      return !!newUser;
+      const newUserId = await UserService.createUser(user);
+      return newUserId;
     } catch (error) {
       logger.error(error);
-      return false;
+      return -1;
     }
   }
 

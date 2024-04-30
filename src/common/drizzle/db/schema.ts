@@ -13,7 +13,7 @@ export const users = mysqlTable(
   'users',
   {
     id: int('id').primaryKey().autoincrement(),
-    username: varchar('username', { length: 256 }).unique(),
+    username: varchar('username', { length: 256 }).notNull().unique(),
     password: varchar('password', { length: 255 }),
     lastActive: timestamp('lastActive').defaultNow(),
     archived: tinyint('archived').default(0),

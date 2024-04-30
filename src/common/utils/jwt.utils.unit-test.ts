@@ -3,11 +3,11 @@ import { verifyToken, generateToken } from './jwt.util';
 
 describe('JWT Utils', () => {
   const user: IUserDTO = {
-    id: '123',
+    id: 123,
     username: 'bob',
     password: '12345',
     lastActive: new Date(),
-    archived: false,
+    archived: 0,
   };
   describe('generateToken', () => {
     it('should generate a token', () => {
