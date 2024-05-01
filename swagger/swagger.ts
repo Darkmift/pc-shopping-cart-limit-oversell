@@ -1,5 +1,7 @@
 import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerJson from './swagger.json';
+import UserCreate from './schemas/UserCreate';
+import User from './schemas/User';
+import Cart from './schemas/Cart';
 
 const options = {
   definition: {
@@ -8,13 +10,20 @@ const options = {
       title: 'API Documentation',
       version: '1.0.0',
     },
+    components: {
+      schemas: {
+        UserCreateDTO: UserCreate,
+        UserDTO: User,
+        CartDTO: Cart
+      },
+    },
   },
   apis: [
-    'src/api/auth/auth.controller.ts',
-    'src/api/users/users.routes.ts',
-    'src/api/carts/carts.routes.ts',
-    'src/api/products/products.routes.ts',
-    'src/api/product-inventory/product-inventory.routes.ts',
+    `src/api/**/*.controllers.ts`,
+    'src/api/**/*.controller.ts',
+    // 'src/api/carts/carts.routes.ts',
+    // 'src/api/products/products.routes.ts',
+    // 'src/api/product-inventory/product-inventory.routes.ts',
   ],
 };
 
