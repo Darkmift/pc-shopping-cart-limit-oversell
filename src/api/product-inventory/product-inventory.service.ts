@@ -1,8 +1,10 @@
 import db from '@/common/drizzle/db';
 import { productsInventory } from '@/common/drizzle/db/schema';
 import logger from '@/common/utils/logger';
-import { IProductDTO } from '@/types/product';
-import { IProductInventoryCreateDTO } from '@/types/product-inventory';
+import {
+  IProductInventoryCreateDTO,
+  IProductInventoryDTO,
+} from '@/types/product-inventory';
 import { and, eq, isNull, sql } from 'drizzle-orm';
 
 export class ProductInventoryService {
@@ -73,10 +75,11 @@ export class ProductInventoryService {
   public async addProductInventoryItemToCart(
     productId: number,
     cartId: number,
-  ): Promise<number> {
+    amount: number,
+  ): Promise<IProductInventoryDTO[]> {
     try {
       const transaction = await db.transaction(async (tx) => {
-        const [availableProductInventory] = await tx
+        const availableProductInventory = await tx
           .select()
           .from(productsInventory)
           .where(
@@ -85,27 +88,34 @@ export class ProductInventoryService {
               eq(productsInventory.productId, productId),
             ),
           )
-          .limit(1);
+          .limit(amount);
 
-        if (!availableProductInventory) {
+        if (
+          !availableProductInventory ||
+          availableProductInventory.length < amount
+        ) {
           await tx.rollback();
           return null;
         }
 
-        await tx
-          .update(productsInventory)
-          .set({
-            cartId,
-          })
-          .where(and(eq(productsInventory.id, availableProductInventory.id)));
+        for (let index = 0; index < availableProductInventory.length; index++) {
+          const availableItemitem = availableProductInventory[index];
+
+          await tx
+            .update(productsInventory)
+            .set({
+              cartId,
+            })
+            .where(and(eq(productsInventory.id, availableItemitem.id)));
+        }
 
         return availableProductInventory;
       });
 
-      return transaction ? transaction.id : -1;
+      return transaction || [];
     } catch (error) {
       logger.error('Error assigning cart to product', error);
-      return -1;
+      return [];
     }
   }
 

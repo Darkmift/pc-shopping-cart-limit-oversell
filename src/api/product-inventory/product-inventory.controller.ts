@@ -45,20 +45,6 @@ export class ProductInventoryController {
     });
   };
 
-  // add product to cart
-  public addProductToCart: ControllerMethod = async (req, res) => {
-    const { productId, cartId } = req.body;
-    const newProduct = await this.service.addProductInventoryItemToCart(
-      productId,
-      cartId,
-    );
-    return buildStandartResponse({
-      res,
-      data: newProduct,
-      status: newProduct ? 201 : 500,
-    });
-  };
-
   // remove product from cart
   public removeProductFromCart: ControllerMethod = async (req, res) => {
     const { inventoryProductId } = req.body;

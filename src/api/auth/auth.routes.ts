@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login } from './auth.controller';
+import { register, login } from './auth.controllers';
 
 /**
  * Router for handling authentication which includes registering and logging in users.
