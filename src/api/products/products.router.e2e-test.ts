@@ -7,7 +7,6 @@ app.use('/products', productsRouter);
 describe('ProductsRouter', () => {
   it('GET / - should return "Hello from ProductsService!"', async () => {
     const res = await request(app).get('/products');
-    console.log('🚀 ~ WTGDF ~ res:', res.body.data);
     const data = res.body.data;
     expect(data).toBeDefined();
     expect(data).toBeInstanceOf(Array);
