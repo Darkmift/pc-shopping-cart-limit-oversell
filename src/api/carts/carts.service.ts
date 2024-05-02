@@ -37,12 +37,10 @@ export class CartsService {
 
   public async createCart(userId: number) {
     try {
-      const cart = await db
-        .insert(carts)
-        .values({
-          userId,
-        })
-        .execute();
+      const cart = await db.insert(carts).values({
+        userId,
+      });
+
       return cart[0].insertId;
     } catch (error) {
       logger.error('Error creating cart', error);
@@ -57,7 +55,6 @@ export class CartsService {
       .set({
         isActive: 0,
       })
-      .where(eq(carts.id, cartId))
-      .execute();
+      .where(eq(carts.id, cartId));
   }
 }

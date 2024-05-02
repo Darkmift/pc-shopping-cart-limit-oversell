@@ -5,10 +5,6 @@ import UsersService from '../users/users.service';
 import { IUserCreateDTO, IUserDTO } from '@/types/user';
 import { sql, eq } from 'drizzle-orm';
 
-async function deleteAllCartsForUser(userId: number) {
-  await db.delete(carts).where(eq(carts.userId, userId));
-}
-
 describe('CartsService', () => {
   let service: CartsService;
   let cartOwner: IUserDTO;
@@ -23,17 +19,11 @@ describe('CartsService', () => {
     cartOwner = userCreated!;
   });
 
-  afterAll(async () => {
-    // delete all carts for user
-    await deleteAllCartsForUser(cartOwner.id);
-    await UsersService.removeUserByUsername(cartOwner.username);
-  });
-
   beforeEach(() => {
     service = new CartsService();
   });
 
-  describe('getHello', () => {
+  describe('getHello - service is defined', () => {
     it('should return "Hello from CartsService!"', () => {
       expect(service.getHello()).toEqual('Hello from CartsService!');
     });
