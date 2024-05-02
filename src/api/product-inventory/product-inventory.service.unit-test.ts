@@ -2,6 +2,9 @@ import { ProductInventoryService } from './product-inventory.service';
 import { CartsService } from '../carts/carts.service';
 import { ProductsService } from '../products/products.service';
 import UsersService from '../users/users.service';
+import db from '@/common/drizzle/db';
+import { sql } from 'drizzle-orm';
+import exp from 'constants';
 
 describe('ProductInventoryService', () => {
   let service: ProductInventoryService;
@@ -9,6 +12,16 @@ describe('ProductInventoryService', () => {
   let userId: number;
   let productId: number;
   let inventoryProductId: number;
+
+  beforeAll(async () => {
+    // Change the transaction isolation level to READ-COMMITTED
+    await db.execute(sql`SET SESSION transaction_isolation='READ-COMMITTED'`);
+  });
+
+  afterAll(async () => {
+    // Change the transaction isolation level back to REPEATABLE-READ
+    await db.execute(sql`SET SESSION transaction_isolation='REPEATABLE-READ'`);
+  });
 
   beforeAll(async () => {
     const cartService = new CartsService();
@@ -75,7 +88,7 @@ describe('ProductInventoryService', () => {
   // createMultipleInventoryProducts
   describe('createMultipleInventoryProducts', () => {
     it('should create multiple products in inventory at once', async () => {
-      const newProductsAmount = 5;
+      const newProductsAmount = 10;
       const affectedRows = await service.createMultipleInventoryProducts(
         productId,
         newProductsAmount,
@@ -87,21 +100,27 @@ describe('ProductInventoryService', () => {
 
   // TODO: Fix this broken logic
   // addProductToCart
-  describe.skip('addProductToCart', () => {
+  describe('addProductToCart', () => {
     it('should add product to cart', async () => {
-      const addedProduct = await service.addProductInventoryItemToCart(
-        productId,
-        cartId,
-        10,
+      const amount = 10;
+
+      await service.addProductInventoryItemToCart(productId, cartId, amount);
+
+      // read how many products are in inventory
+      const postInvProds = await service.getInventoryProductsByCartId(cartId);
+
+      //expect postInvProds to be array of { id,productId,cartId}
+      expect(postInvProds).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            productId: expect.any(Number),
+            cartId: expect.any(Number),
+          }),
+        ]),
       );
-      //expect addedProduct to be { id,productId,cartId}
-      expect(addedProduct).toEqual(
-        expect.objectContaining({
-          id: expect.any(Number),
-          productId: expect.any(Number),
-          cartId: expect.any(Number),
-        }),
-      );
+      // expect postInvProds length to be amount
+      expect(postInvProds.length).toBe(amount);
     });
   });
 

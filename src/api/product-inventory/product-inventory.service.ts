@@ -35,12 +35,23 @@ export class ProductInventoryService {
   public async getInventoryProductsByCartId(cartId: number) {
     const prepared = db.query.productsInventory
       .findMany({
-        where: (productsInventory, { eq }) =>
-          eq(productsInventory.cartId, sql.placeholder('cartId')),
+        where: eq(productsInventory.cartId, sql.placeholder('cartId')),
       })
       .prepare();
 
     const inventoryProducts = await prepared.execute({ cartId });
+    return inventoryProducts;
+  }
+
+  // get all products in inventory by productId
+  public async getInventoryProductsByProductId(productId: number) {
+    const prepared = db.query.productsInventory
+      .findMany({
+        where: eq(productsInventory.productId, sql.placeholder('productId')),
+      })
+      .prepare();
+
+    const inventoryProducts = await prepared.execute({ productId });
     return inventoryProducts;
   }
 
@@ -140,27 +151,15 @@ export class ProductInventoryService {
     amount: number,
   ): Promise<IProductInventoryDTO[]> {
     try {
+      // Call the stored procedure to handle the inventory assignment
       const query = sql`
-        BEGIN;
-
-        -- Select available product inventory items for the given product ID
-        SELECT * FROM product_inventory
-        WHERE cart_id IS NULL
-        AND product_id = ${productId}
-        LIMIT ${amount}
-        FOR UPDATE;
-        
-        -- Update the cart_id for selected inventory items
-        UPDATE product_inventory
-        SET cart_id = ${cartId}
-        WHERE id IN (SELECT id FROM product_inventory WHERE cart_id IS NULL AND product_id = ${productId} LIMIT ${amount});
-        
-        COMMIT;
+        CALL addItemsToCart(${cartId}, ${productId}, ${amount});
       `;
 
-      const transaction = await db.execute(
+      // Execute the stored procedure
+      const transaction = (await db.execute(
         query,
-      ) as unknown as IProductInventoryDTO[];
+      )) as unknown as IProductInventoryDTO[];
 
       return transaction ?? [];
     } catch (error) {
