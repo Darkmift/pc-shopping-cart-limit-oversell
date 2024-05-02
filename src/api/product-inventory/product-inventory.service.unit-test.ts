@@ -2,9 +2,6 @@ import { ProductInventoryService } from './product-inventory.service';
 import { CartsService } from '../carts/carts.service';
 import { ProductsService } from '../products/products.service';
 import UsersService from '../users/users.service';
-import db from '@/common/drizzle/db';
-import { sql } from 'drizzle-orm';
-import exp from 'constants';
 
 describe('ProductInventoryService', () => {
   let service: ProductInventoryService;
@@ -51,7 +48,6 @@ describe('ProductInventoryService', () => {
   // describe createInventoryProduct
   describe('createInventoryProduct', () => {
     it('should create a product in inventory', async () => {
-      console.log('🚀 ~ it ~ productId:', productId);
       const newProductInventoryId = await service.createInventoryProduct({
         productId,
       });
@@ -94,13 +90,14 @@ describe('ProductInventoryService', () => {
     it('should add product to cart', async () => {
       const amount = 10;
 
-      await service.addProductInventoryItemToCart(productId, cartId, amount);
-
-      // read how many products are in inventory
-      const postInvProds = await service.getInventoryProductsByCartId(cartId);
+      const results = await service.addProductInventoryItemToCart(
+        productId,
+        cartId,
+        amount,
+      );
 
       //expect postInvProds to be array of { id,productId,cartId}
-      expect(postInvProds).toEqual(
+      expect(results).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(Number),
@@ -110,7 +107,7 @@ describe('ProductInventoryService', () => {
         ]),
       );
       // expect postInvProds length to be amount
-      expect(postInvProds.length).toBe(amount);
+      expect(results.length).toBe(amount);
     });
   });
 

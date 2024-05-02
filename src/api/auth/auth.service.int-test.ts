@@ -43,7 +43,6 @@ describe('AuthService', () => {
 
     it('should login a user', async () => {
       const result = await AuthService.loginUser(user);
-      console.log('🚀 ~ it ~ result:', result);
       expect(result).toHaveProperty('user');
       expect(result).toHaveProperty('token');
       //expect result.user.password to be undefined
