@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '@/../swagger/swagger';
 import apiRouter from './api/index.routes';
 import cors from 'cors';
+import { seedData } from './common/drizzle/db';
 
 const app: Express = express();
 
@@ -15,5 +16,8 @@ app.get('/health', (req, res) => {
 });
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/api/v1', apiRouter);
+
+// run sql seed
+seedData();
 
 export default app;

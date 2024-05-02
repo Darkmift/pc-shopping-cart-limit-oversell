@@ -5,6 +5,10 @@ import * as schema from './schema';
 import logger from '@/common/utils/logger';
 import { Logger } from 'drizzle-orm/logger';
 import { MySqlTransactionConfig } from 'drizzle-orm/mysql-core/session';
+import {
+  DROP_IF_EXISTS_ADD_ITEMS_TO_CART_PROCEDURE,
+  ADD_ITEMS_TO_CART_PROCEDURE,
+} from './queries/addItemsToCart';
 
 export const poolConnection = mysql.createPool({
   host: config.MYSQL_HOST,
@@ -56,4 +60,17 @@ export const TRNASACTIONS_RUN_CONFIG: MySqlTransactionConfig = {
   isolationLevel: 'read committed',
   accessMode: 'read write',
   withConsistentSnapshot: true,
+};
+
+export const seedData = async () => {
+  try {
+    logger.info('Seeding MYSQL data');
+    // create the stored procedure
+    await db.execute(DROP_IF_EXISTS_ADD_ITEMS_TO_CART_PROCEDURE);
+    await db.execute(ADD_ITEMS_TO_CART_PROCEDURE);
+  } catch (error) {
+    logger.error('Error seeding data', error);
+    // crash the process if seeding fails
+    process.exit(1);
+  }
 };
