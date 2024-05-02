@@ -152,9 +152,9 @@ export class ProductInventoryService {
   ): Promise<IProductInventoryDTO[]> {
     try {
       // Call the stored procedure to handle the inventory assignment
-      const query = sql`
+      const query = sql.raw(`
         CALL addItemsToCart(${cartId}, ${productId}, ${amount});
-      `;
+      `);
 
       // Execute the stored procedure
       const transaction = (await db.execute(

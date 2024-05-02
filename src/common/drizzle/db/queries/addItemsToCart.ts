@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 
-const DROP_IF_EXISTS_ADD_ITEMS_TO_CART_PROCEDURE = sql`DROP PROCEDURE IF EXISTS addItemsToCart;`;
-const ADD_ITEMS_TO_CART_PROCEDURE = sql`
+const DROP_IF_EXISTS_ADD_ITEMS_TO_CART_PROCEDURE = sql.raw(`DROP PROCEDURE IF EXISTS addItemsToCart;`);
+const ADD_ITEMS_TO_CART_PROCEDURE = sql.raw(`
 CREATE PROCEDURE addItemsToCart(IN p_cartId INT, IN p_productId INT, IN p_amount INT)
 BEGIN
     DECLARE availableCount INT;
@@ -26,7 +26,7 @@ BEGIN
         COMMIT;
     END IF;
 END
-`;
+`);
 
 export {
   ADD_ITEMS_TO_CART_PROCEDURE,

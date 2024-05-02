@@ -2,15 +2,11 @@ import db from '@/common/drizzle/db';
 import { ProductsService } from './products.service';
 import { products } from '@/common/drizzle/db/schema';
 
-describe.skip('ProductsService', () => {
+describe('ProductsService', () => {
   let service: ProductsService;
 
   beforeEach(() => {
     service = new ProductsService();
-  });
-
-  afterAll(async () => {
-    await db.delete(products);
   });
 
   //describe hello

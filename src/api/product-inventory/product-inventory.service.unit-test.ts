@@ -116,7 +116,7 @@ describe('ProductInventoryService', () => {
 
   // TODO: Fix this broken logic -- will test after fixing addProductToCart
   // getInventoryProductsByCartId
-  describe.skip('getInventoryProductsByCartId', () => {
+  describe('getInventoryProductsByCartId', () => {
     it('should get all products in inventory by cartId', async () => {
       const inventoryProducts = await service.getInventoryProductsByCartId(
         cartId,
