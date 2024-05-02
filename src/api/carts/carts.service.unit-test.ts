@@ -1,9 +1,6 @@
-import db from '@/common/drizzle/db';
-import { carts } from '@/common/drizzle/db/schema';
 import { CartsService } from './carts.service';
 import UsersService from '../users/users.service';
 import { IUserCreateDTO, IUserDTO } from '@/types/user';
-import { sql, eq } from 'drizzle-orm';
 
 describe('CartsService', () => {
   let service: CartsService;

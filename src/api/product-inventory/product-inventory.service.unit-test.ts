@@ -14,16 +14,6 @@ describe('ProductInventoryService', () => {
   let inventoryProductId: number;
 
   beforeAll(async () => {
-    // Change the transaction isolation level to READ-COMMITTED
-    await db.execute(sql`SET SESSION transaction_isolation='READ-COMMITTED'`);
-  });
-
-  afterAll(async () => {
-    // Change the transaction isolation level back to REPEATABLE-READ
-    await db.execute(sql`SET SESSION transaction_isolation='REPEATABLE-READ'`);
-  });
-
-  beforeAll(async () => {
     const cartService = new CartsService();
     const productService = new ProductsService();
     // make user for cart
