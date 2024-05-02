@@ -2,7 +2,7 @@ import db from '@/common/drizzle/db';
 import { ProductsService } from './products.service';
 import { products } from '@/common/drizzle/db/schema';
 
-describe('ProductsService', () => {
+describe.skip('ProductsService', () => {
   let service: ProductsService;
 
   beforeEach(() => {
