@@ -120,6 +120,10 @@ const logger = winston.createLogger({
       format: 'YYYY-MM-DD HH:mm:ss',
     }),
     winston.format.printf((info) => {
+      try {
+        info.message = JSON.stringify(info.message, null, 2);
+      } catch (error) {}
+
       // Check if there is a stack available (it's an error) and format accordingly
       // Also serialize and include all additional arguments
       return `${info.timestamp} ${info.level}: ${info.message}${

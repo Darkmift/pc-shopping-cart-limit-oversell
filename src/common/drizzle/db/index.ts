@@ -3,6 +3,8 @@ import { drizzle, type MySql2Database } from 'drizzle-orm/mysql2';
 import mysql from 'mysql2/promise';
 import * as schema from './schema';
 import logger from '@/common/utils/logger';
+import { Logger } from 'drizzle-orm/logger';
+import { MySqlTransactionConfig } from 'drizzle-orm/mysql-core/session';
 
 export const poolConnection = mysql.createPool({
   host: config.MYSQL_HOST,
@@ -36,9 +38,22 @@ poolConnection.on('release', (connection) => {
   logger.info('MySQL connection released');
 });
 
+class MyLogWriter implements Logger {
+  logQuery(query: string, params: unknown[]): void {
+    logger.info({ query, params });
+  }
+}
+
 const db: MySql2Database<typeof schema> = drizzle(poolConnection, {
   schema,
   mode: 'default',
+  logger: new MyLogWriter(),
 });
 
 export default db;
+
+export const TRNASACTIONS_RUN_CONFIG: MySqlTransactionConfig = {
+  isolationLevel: 'read committed',
+  accessMode: 'read write',
+  withConsistentSnapshot: true,
+};
