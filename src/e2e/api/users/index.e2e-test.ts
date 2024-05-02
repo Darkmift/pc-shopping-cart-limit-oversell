@@ -19,7 +19,6 @@ describe('GET /api/v1/users', () => {
       const response = await request(app)
         .get(endpoint)
         .set('Accept', 'application/json');
-      console.log('🚀 ~ it ~ response:', response.body);
 
       // expect response.body.data to be an array
       expect(response.body.data).toBeInstanceOf(Array);
@@ -43,7 +42,6 @@ describe('GET /api/v1/users', () => {
       const response = await request(app)
         .get(`${endpoint}/1/carts`)
         .set('Accept', 'application/json');
-      console.log('🚀 ~ it ~ response:', response.body);
 
       // expect response.body.data to be an array
       expect(response.body.data).toBeInstanceOf(Array);
