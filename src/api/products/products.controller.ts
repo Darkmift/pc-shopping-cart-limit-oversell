@@ -9,10 +9,6 @@ export class ProductsController {
     this.service = service;
   }
 
-  public getHello(): string {
-    return this.service.getHello();
-  }
-
   // a controller method to get all products
   public getProducts: ControllerMethod = async (req, res) => {
     const products = await this.service.getProducts();
