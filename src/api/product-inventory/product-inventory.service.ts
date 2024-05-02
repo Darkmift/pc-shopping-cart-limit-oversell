@@ -1,10 +1,10 @@
-import db, { TRNASACTIONS_RUN_CONFIG } from '@/common/drizzle/db';
+import db from '@/common/drizzle/db';
 import { productsInventory } from '@/common/drizzle/db/schema';
 import logger from '@/common/utils/logger';
 import {
   IProductInventoryCreateDTO,
   IProductInventoryDTO,
-} from '@/types/product-inventory';
+} from '@/types/inventory-product';
 import { SQL, and, eq, inArray, isNull, sql } from 'drizzle-orm';
 
 export class ProductInventoryService {
@@ -157,11 +157,11 @@ export class ProductInventoryService {
       `);
 
       // Execute the stored procedure
-      const transaction = (await db.execute(
-        query,
-      )) as unknown as IProductInventoryDTO[];
+      const transaction = await db.execute(query);
 
-      return transaction ?? [];
+      const result = transaction?.[0][0] ?? [];
+
+      return result as unknown as IProductInventoryDTO[];
     } catch (error) {
       logger.error('Error assigning cart to product', error);
       return [];
