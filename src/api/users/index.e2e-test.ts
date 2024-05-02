@@ -1,6 +1,6 @@
 import request from 'supertest';
 import UsersService from '@/api/users/users.service';
-import app from '../../../index';
+import app from '@/index';
 import { IUserDTO } from '@/types/user';
 
 const endpoint = '/api/v1/users';

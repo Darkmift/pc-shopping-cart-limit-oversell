@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../../index';
+import app from '@/index';
 import UsersService from '@/api/users/users.service';
 
 const endpoint = '/api/v1/auth';
