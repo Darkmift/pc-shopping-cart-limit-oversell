@@ -1,11 +1,11 @@
-import db from '@/common/drizzle/db';
+import db, { TRNASACTIONS_RUN_CONFIG } from '@/common/drizzle/db';
 import { productsInventory } from '@/common/drizzle/db/schema';
 import logger from '@/common/utils/logger';
 import {
   IProductInventoryCreateDTO,
   IProductInventoryDTO,
 } from '@/types/product-inventory';
-import { and, eq, isNull, sql } from 'drizzle-orm';
+import { SQL, and, eq, inArray, isNull, sql } from 'drizzle-orm';
 
 export class ProductInventoryService {
   public getHello(): string {
@@ -31,13 +31,23 @@ export class ProductInventoryService {
     return inventoryProduct;
   }
 
+  // get all products in inventory by cartId
+  public async getInventoryProductsByCartId(cartId: number) {
+    const prepared = db.query.productsInventory
+      .findMany({
+        where: (productsInventory, { eq }) =>
+          eq(productsInventory.cartId, sql.placeholder('cartId')),
+      })
+      .prepare();
+
+    const inventoryProducts = await prepared.execute({ cartId });
+    return inventoryProducts;
+  }
+
   // create product in inventory
   public async createInventoryProduct(product: IProductInventoryCreateDTO) {
     try {
-      const newProduct = await db
-        .insert(productsInventory)
-        .values(product)
-        .execute();
+      const newProduct = await db.insert(productsInventory).values(product);
       const newProductId = newProduct[0].insertId;
 
       return newProductId;
@@ -61,8 +71,7 @@ export class ProductInventoryService {
       );
       const newProducts = await db
         .insert(productsInventory)
-        .values(newProductToInsert)
-        .execute();
+        .values(newProductToInsert);
 
       return newProducts[0].affectedRows;
     } catch (error) {
@@ -71,8 +80,7 @@ export class ProductInventoryService {
     }
   }
 
-  // assign cartId to product in inventory
-  public async addProductInventoryItemToCart(
+  public async addProductInventoryItemToCartLegacy(
     productId: number,
     cartId: number,
     amount: number,
@@ -95,24 +103,71 @@ export class ProductInventoryService {
           availableProductInventory.length < amount
         ) {
           await tx.rollback();
-          return null;
         }
 
-        for (let index = 0; index < availableProductInventory.length; index++) {
-          const availableItemitem = availableProductInventory[index];
+        // Constructing a CASE statement dynamically
+        const caseSql = sql`CASE ${sql.join(
+          availableProductInventory.map(
+            (item) => sql`WHEN id = ${item.id} THEN ${cartId}`,
+          ),
+          ' ',
+        )} ELSE cartId END`;
 
-          await tx
-            .update(productsInventory)
-            .set({
-              cartId,
-            })
-            .where(and(eq(productsInventory.id, availableItemitem.id)));
-        }
+        // Execute a single update operation to set the cartId for all selected inventory items using a CASE statement
+        await tx
+          .update(productsInventory)
+          .set({ cartId: caseSql })
+          .where(
+            inArray(
+              productsInventory.id,
+              availableProductInventory.map((item) => item.id),
+            ),
+          );
 
         return availableProductInventory;
       });
 
-      return transaction || [];
+      return transaction ?? [];
+    } catch (error) {
+      logger.error('Error assigning cart to product', error);
+      return [];
+    }
+  }
+
+  public async addProductInventoryItemToCart(
+    productId: number,
+    cartId: number,
+    amount: number,
+  ): Promise<IProductInventoryDTO[]> {
+    try {
+      const query = sql`
+        BEGIN;
+  
+        -- Select available product inventory items for the given product ID
+        SELECT * FROM product_inventory
+        WHERE cart_id IS NULL
+        AND product_id = ${productId}
+        LIMIT ${amount}
+        FOR UPDATE;
+  
+        -- If the selected inventory items are not sufficient, rollback the transaction
+        IF (SELECT COUNT(*) FROM product_inventory WHERE cart_id IS NULL AND product_id = ${productId}) < ${amount} THEN
+          ROLLBACK;
+        END IF;
+  
+        -- Update the cart_id for selected inventory items
+        UPDATE product_inventory
+        SET cart_id = ${cartId}
+        WHERE id IN (SELECT id FROM product_inventory WHERE cart_id IS NULL AND product_id = ${productId} LIMIT ${amount});
+  
+        COMMIT;
+      `;
+
+      const transaction = await db.execute(
+        query,
+      ) as unknown as IProductInventoryDTO[];
+
+      return transaction ?? [];
     } catch (error) {
       logger.error('Error assigning cart to product', error);
       return [];
@@ -134,6 +189,38 @@ export class ProductInventoryService {
       return removedProduct[0].affectedRows > 0;
     } catch (error) {
       logger.error('Error removing product from cart', error);
+      return false;
+    }
+  }
+
+  public async removeMultipleProductsFromCart(
+    inventoryProductIds: number[],
+  ): Promise<boolean> {
+    try {
+      // Check if inventoryProductIds is not empty to prevent unwanted full table updates
+      if (!inventoryProductIds.length) {
+        throw new Error('No product IDs provided.');
+      }
+
+      // Prepare the CASE statement using SQL templating
+      const sqlParts: SQL[] = inventoryProductIds.map(
+        (id) => sql`WHEN id = ${id} THEN NULL`,
+      );
+      const caseStatement = sql`CASE ${sql.join(
+        sqlParts,
+        ' ',
+      )} ELSE cartId END`;
+
+      // Execute the update operation
+      const result = await db
+        .update(productsInventory)
+        .set({ cartId: caseStatement })
+        .where(inArray(productsInventory.id, inventoryProductIds)); // Utilizing a properly implemented inArray method
+
+      // Check if any rows were affected
+      return result[0].affectedRows > 0;
+    } catch (error) {
+      logger.error('Error removing products from cart', error);
       return false;
     }
   }
