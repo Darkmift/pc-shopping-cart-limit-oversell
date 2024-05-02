@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import logger from '@/common/utils/logger';
-import { cleanEnv, num, str } from 'envalid';
+import { cleanEnv, num, str, bool } from 'envalid';
 
 // Ensure the test environment file is prioritized during tests
 const envFile = `.env.${process.env.NODE_ENV}.local`;
@@ -16,6 +16,7 @@ const env = cleanEnv(process.env, {
   MYSQL_DATABASE: str(),
   NODE_ENV: str({ choices: ['development', 'test', 'production', 'staging'] }),
   JWT_SECRET: str(),
+  RUN_DB_LOGS: bool({ default: false }),
 });
 
 export default env;

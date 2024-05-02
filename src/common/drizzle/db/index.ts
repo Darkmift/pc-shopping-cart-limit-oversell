@@ -1,5 +1,9 @@
 import config from '@/common/config';
-import { drizzle, type MySql2Database } from 'drizzle-orm/mysql2';
+import {
+  MySql2DrizzleConfig,
+  drizzle,
+  type MySql2Database,
+} from 'drizzle-orm/mysql2';
 import mysql from 'mysql2/promise';
 import * as schema from './schema';
 import logger from '@/common/utils/logger';
@@ -26,33 +30,38 @@ export const poolConnection = mysql.createPool({
   // debug: true,
 });
 
-poolConnection.on('connection', (connection) => {
-  logger.info('MySQL connection established');
-});
+if (config.RUN_DB_LOGS) {
+  poolConnection.on('connection', (connection) => {
+    logger.info('MySQL connection established');
+  });
 
-poolConnection.on('acquire', (connection) => {
-  logger.info('MySQL connection acquired');
-});
+  poolConnection.on('acquire', (connection) => {
+    logger.info('MySQL connection acquired');
+  });
 
-poolConnection.on('enqueue', () => {
-  logger.info('Waiting for available connection slot');
-});
+  poolConnection.on('enqueue', () => {
+    logger.info('Waiting for available connection slot');
+  });
 
-poolConnection.on('release', (connection) => {
-  logger.info('MySQL connection released');
-});
-
+  poolConnection.on('release', (connection) => {
+    logger.info('MySQL connection released');
+  });
+}
 class MyLogWriter implements Logger {
   logQuery(query: string, params: unknown[]): void {
     logger.info({ query, params });
   }
 }
 
-const db: MySql2Database<typeof schema> = drizzle(poolConnection, {
+const dbOptions: MySql2DrizzleConfig<typeof schema> = {
   schema,
   mode: 'default',
-  logger: new MyLogWriter(),
-});
+};
+if (config.RUN_DB_LOGS) {
+  dbOptions.logger = new MyLogWriter();
+}
+
+const db: MySql2Database<typeof schema> = drizzle(poolConnection, dbOptions);
 
 export default db;
 
@@ -71,6 +80,6 @@ export const seedData = async () => {
   } catch (error) {
     logger.error('Error seeding data', error);
     // crash the process if seeding fails
-    process.exit(1);
+    // process.exit(1);
   }
 };
