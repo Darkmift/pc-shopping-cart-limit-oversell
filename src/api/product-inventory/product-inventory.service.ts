@@ -142,24 +142,19 @@ export class ProductInventoryService {
     try {
       const query = sql`
         BEGIN;
-  
+
         -- Select available product inventory items for the given product ID
         SELECT * FROM product_inventory
         WHERE cart_id IS NULL
         AND product_id = ${productId}
         LIMIT ${amount}
         FOR UPDATE;
-  
-        -- If the selected inventory items are not sufficient, rollback the transaction
-        IF (SELECT COUNT(*) FROM product_inventory WHERE cart_id IS NULL AND product_id = ${productId}) < ${amount} THEN
-          ROLLBACK;
-        END IF;
-  
+        
         -- Update the cart_id for selected inventory items
         UPDATE product_inventory
         SET cart_id = ${cartId}
         WHERE id IN (SELECT id FROM product_inventory WHERE cart_id IS NULL AND product_id = ${productId} LIMIT ${amount});
-  
+        
         COMMIT;
       `;
 
